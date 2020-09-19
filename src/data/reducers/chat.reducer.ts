@@ -1,69 +1,61 @@
-import { Message, Action, ActionTypes, User } from '../actions';
+import { act } from 'react-dom/test-utils';
+import { Action, ActionTypes, disconnectSocket } from '../actions';
+import { User, Room } from '../models';
 
 interface InitialChatState {
-  messages: Message[];
   connectedUsers: User[];
+  rooms: Room[];
 }
 
 const initialState: InitialChatState = {
-  messages: [],
   connectedUsers: [],
+  rooms: [],
 }
 
 export const chatReducer = (state = initialState, action: Action) => {
   switch(action.type) {
-    case ActionTypes.SEND_MESSAGE: {
-      const sendMessage = action.payload;
-      state.messages.push(sendMessage);
+    case ActionTypes.NEW_USER: {
+      const newUser = action.payload;
+      return {
+        ...state,
+        connectedUsers: [...state.connectedUsers, newUser],
+      }
+    }
+    case ActionTypes.NEW_ROOM: {
+      const newRoom = action.payload;
 
       return {
         ...state,
-        messages: [...state.messages],
+        rooms: [...state.rooms, newRoom],
       }
     }
-    case ActionTypes.RECEIVE_MESSAGE: {
-      const incomingMessage = action.payload;
-      state.messages.push(incomingMessage);
-      
+    case ActionTypes.ROOM_DELETED: {
+      const roomId = action.payload;
+      const remainingRooms = state.rooms.filter(room => room.id !== roomId);
+
       return {
         ...state,
-        messages: [...state.messages],
+        rooms: remainingRooms,
       }
     }
-    case ActionTypes.USER_JOINED: {
-      const newUser = action.payload;
-      state.connectedUsers.push(newUser);
-      
+    case ActionTypes.RECEIVE_CHAT_STATE: {
+      const { connectedUsers, availableRooms } = action.payload;
+
       return {
         ...state,
-        connectedUsers: [...state.connectedUsers],
+        connectedUsers,
+        rooms: availableRooms,
       }
     }
-    case ActionTypes.USER_LEFT: {
-      const goneUser = action.payload;
-      const remainingUsers = state.connectedUsers.filter(user => user.id !== goneUser.id);
-      
+    case ActionTypes.USER_DISCONNECTED: {
+      const userId = action.payload;
+      const disconnectedUser = state.connectedUsers.find(user => user.id === userId);
+      const remainingUsers = state.connectedUsers.filter(user => user.id !== userId);
+      console.log(`user left`, disconnectedUser);
+
       return {
         ...state,
         connectedUsers: remainingUsers,
-      }
-    }
-    case ActionTypes.JOIN: {
-      const me = action.payload;
-      state.connectedUsers.push(me);
-      
-      return {
-        ...state,
-        connectedUsers: [...state.connectedUsers],
-      }
-    }
-    case ActionTypes.LEAVE: {
-      const me = action.payload;
-      const updatedUsers = state.connectedUsers.filter(user => user.id !== me.id);
-      
-      return {
-        ...state,
-        connectedUsers: updatedUsers,
       }
     }
     default:

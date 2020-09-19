@@ -1,16 +1,24 @@
 import { combineReducers } from 'redux';
 import { chatReducer } from './chat.reducer';
-import { Message, User } from '../actions';
+import { userReducer } from './user.reducer';
+import { Room, User } from '../models';
 
 export interface StoreState {
   chat: {
-    messages: Message[],
-    connectedUsers: User[],
-  }
+    connectedUsers: User[];
+    rooms: Room[];
+  },
+  user: {
+    nickname: string;
+    loggedIn: boolean;
+    myRooms: Room[];
+    id?: string;
+  },
 }
 
 const rootReducer = combineReducers<StoreState>({
-  chat: chatReducer
+  chat: chatReducer,
+  user: userReducer,
 });
 
 export default rootReducer;

@@ -1,14 +1,24 @@
-import { SendMessage, RecieveMessage, DiscnnectSocket, ConnectSocket, JoinUser, LeaveUser, Join, Leave } from './chat.actions';
+import { DisconnectSocket, ConnectSocket, CreateNewChatUser, NewUser, ReceiveChatState, UserDisconnected, NewRoom, CreateNewChatRoom, DeleteRoom } from './chat.actions';
 
 export enum ActionTypes {
-  SEND_MESSAGE = 'SEND_MESSAGE',
-  RECEIVE_MESSAGE = 'RECIEVE_MESSAGE',
   SOCKET_CONNECT = 'SOCKET_CONNECT',
   SOCKET_DISCONNECT = 'SOCKET_DISCONNECT',
-  USER_JOINED = 'USER_JOINED',
-  USER_LEFT = 'USER_LEFT',
-  JOIN = 'JOIN',
-  LEAVE = 'LEAVE',
+  CREATE_NEW_USER = 'CREATE_NEW_USER',
+  NEW_USER = 'NEW_USER',
+  RECEIVE_CHAT_STATE = 'RECEIVE_CHAT_STATE',
+  USER_DISCONNECTED = 'USER_DISCONNECTED',
+  NEW_ROOM = 'NEW_ROOM',
+  CREATE_NEW_CHAT_ROOM = 'CREATE_NEW_CHAT_ROOM',
+  ROOM_DELETED = 'ROOM_DELETED',
 };
 
-export type Action = SendMessage | RecieveMessage | DiscnnectSocket | ConnectSocket | JoinUser | LeaveUser | Join | Leave;
+export type Action = 
+  ConnectSocket | 
+  DisconnectSocket |
+  CreateNewChatUser |
+  NewUser |
+  ReceiveChatState |
+  UserDisconnected |
+  NewRoom |
+  CreateNewChatRoom |
+  DeleteRoom;
