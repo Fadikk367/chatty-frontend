@@ -1,7 +1,7 @@
 import { Middleware } from 'redux';
 import io from 'socket.io-client';
 import { Action, ActionTypes } from '../actions';
-import { User, Room } from '../models';
+import { User, Room, Message } from '../models';
 
 
 const createSocketMiddleware = (): Middleware => {
@@ -51,6 +51,46 @@ const createSocketMiddleware = (): Middleware => {
           });
         });
 
+        socket.on('message', ({ message, roomId }: { message: Message, roomId: string }) => {
+          next({
+            type: ActionTypes.RECEIVE_CHAT_MESSAGE,
+            payload: {
+              message,
+              roomId,
+            },
+          });
+        });
+        
+
+        socket.on('welcome-to-room', (room: Room) => {
+          next({
+            type: ActionTypes.WELCOME_TO_ROOM,
+            payload: {
+              room,
+            },
+          });
+        });
+
+        socket.on('user-joined-room', (data: { user: User, roomId: string }) => {
+          next({
+            type: ActionTypes.USER_JOINED_ROOM,
+            payload: {
+              user: data.user,
+              roomId: data.roomId,
+            },
+          });
+        });
+
+        socket.on('user-left-room', (data: { user: User, roomId: string }) => {
+          next({
+            type: ActionTypes.USER_LEFT_ROOM,
+            payload: {
+              user: data.user,
+              roomId: data.roomId,
+            },
+          });
+        });
+
         console.log('socket connected');
         break;
       case ActionTypes.CREATE_NEW_USER:
@@ -59,6 +99,17 @@ const createSocketMiddleware = (): Middleware => {
         break;
       case ActionTypes.CREATE_NEW_CHAT_ROOM:
         socket?.emit('new-room', action.payload);
+        break;
+      case ActionTypes.JOIN_ROOM:
+        socket?.emit('join-room', action.payload.roomId);
+        next(action);
+        break;
+      case ActionTypes.LEAVE_ROOM:
+        socket?.emit('leave-room', action.payload.roomId);
+        next(action);
+        break;
+      case ActionTypes.SEND_CHAT_MESSAGE:
+        socket?.emit('message', action.payload);
         break;
       default:
         return next(action);

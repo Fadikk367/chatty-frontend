@@ -9,4 +9,5 @@ export enum ChatUserType {
 export interface ChatState {
   connectedUsers: User[];
   availableRooms: Room[];
+  id: string;
 }

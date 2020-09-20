@@ -5,13 +5,13 @@ import { Room, User } from '../models';
 
 export interface StoreState {
   chat: {
-    connectedUsers: User[];
-    rooms: Room[];
+    connectedUsers: { [key: string]: User },
+    rooms: { [key: string]: Room },
   },
   user: {
     nickname: string;
     loggedIn: boolean;
-    myRooms: Room[];
+    myRooms: string[];
     id?: string;
   },
 }
