@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { ChatsPage, RoomPage, HomePage } from './pages';
+import { ChatsPage, RoomPage } from './pages';
+import HomePage from './pages/HomePage';
 
 import { useDispatch } from 'react-redux';
 import { connectSocket } from './data/actions';
