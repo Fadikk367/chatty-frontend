@@ -1,14 +1,18 @@
-import styled from 'styled-components';
+import styled from'styled-components';
 
-export const HomeWrapper = styled.div`
+export const RoomPageWraper = styled.div`
   display: flex;
   width: 80%;
   height: 100vh;
+  max-height: 100vh;
   margin: auto;
 
   section:first-child {
     flex-grow: 1;
     background-color: lightskyblue;
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
   }
 
   section:nth-child(2) {
@@ -16,6 +20,7 @@ export const HomeWrapper = styled.div`
     background-color: lightgrey;
   }
 `;
+
 
 export const SectionTitle = styled.h3`
   font-size: 1.3em;

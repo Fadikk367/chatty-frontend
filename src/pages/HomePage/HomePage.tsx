@@ -1,56 +1,80 @@
 import React, { FormEvent, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { HomePageWrapper, HomeLeft, HomeRight } from './HomePage.css';
-import { UserLoginForm, GuestEnterForm } from './components';
+import { HomeWrapper, SectionTitle } from './HomePage.css';
+import { ChatRoom, ConnectedUser } from './components';
 
 import { StoreState } from '../../data/reducers';
-import { ChatUserType } from '../../data/models';
-import { createNewChatUser } from '../../data/actions';
+import { createNewChatRoom, joinRoom } from '../../data/actions';
+import { User, Room } from '../../data/models';
 
-import backgroundImage from '../../images/landing_background.png';
 
 const HomePage = () => {
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [nickname, setNickname] = useState('');
-  const userNickname = useSelector((state: StoreState) => state.user.nickname);
+  const rooms = useSelector((store: StoreState) => store.chat.rooms);
+  const users = useSelector((store: StoreState) => store.chat.connectedUsers);
+  const me = useSelector((store: StoreState) => store.user);
+
+  const [newRoomName, setNewRoomName] = useState('');
+  const [roomSlots, setRoomSlots] = useState(0);
+
   const dispatch = useDispatch();
 
-  const handleUserLogin = (e: FormEvent) => {
+  const handleCreateNewChatRoom = (e: FormEvent) => {
     e.preventDefault();
 
-    if (!login || !password)
-      return;
-      
-    console.log(`User login attempt: ${login}, ${password}`)
+    dispatch(createNewChatRoom(newRoomName, roomSlots ? roomSlots : undefined));
   }
 
-  const handleCreateChatUser = (e: FormEvent) => {
-    e.preventDefault();
-
-    if (!nickname)
+  const handleJoinRoom = (roomId: string) => {
+    const room = rooms[roomId];
+    if (room.admin.nick === me.nickname)
       return;
-      
-    dispatch(createNewChatUser(
-      nickname,
-      ChatUserType.GUEST,
-    ));
-  } 
+    console.log(`join room: ${room.name}`);
+    dispatch(joinRoom(roomId));
+  }
 
+  const renderConnectedUser= (user: User) => {
+    return (
+      <ConnectedUser key={user.id} nickname={user.nick} type={user.type}/>
+    )
+  }
+
+  const renderAvailableChatRoom = (room: Room) => {
+    return (
+      <ChatRoom 
+        key={room.id} 
+        onClick={() => handleJoinRoom(room.id)} 
+        membersCount={room.members.length}
+        name={room.name}
+        to={`/chat/rooms/${room.id}`}
+      />
+    )
+  }
+
+  const renderedConnectedUsers = Object.values(users).map(renderConnectedUser);
+  const renderedAvailableChatRooms =  Object.values(rooms).map(renderAvailableChatRoom);
   return (
-    <HomePageWrapper>
-      <HomeLeft>
-        <img src={backgroundImage} alt="tło"/>
-      </HomeLeft>
-      <HomeRight>
-        <h2>Welcome to Chatty</h2>
-        <UserLoginForm />
-        <GuestEnterForm />
-        {/* <Link to='/chat/rooms'>Browse chat rooms</Link> */}
-        </HomeRight>
-    </HomePageWrapper>
+    <HomeWrapper>
+      <section>
+        <SectionTitle>Create new room:</SectionTitle>
+        <form onSubmit={handleCreateNewChatRoom}>
+          <input type="text" value={newRoomName} onChange={e => setNewRoomName(e.target.value)}/>
+          <input type="number" value={roomSlots} onChange={e => setRoomSlots(parseInt(e.target.value))}/>
+          <button type="submit">create room</button>
+        </form>
+        <SectionTitle>Available rooms: ({renderedAvailableChatRooms.length})</SectionTitle>
+        <ul>
+          {renderedAvailableChatRooms}
+        </ul>
+      </section>
+      <section>
+        <SectionTitle>Connected users: ({renderedConnectedUsers.length})</SectionTitle>
+        <ul>
+          {renderedConnectedUsers}
+        </ul>
+      </section>
+
+    </HomeWrapper>
   )
 }
 

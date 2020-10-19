@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { ChatsPage, RoomPage } from './pages';
-import HomePage from './pages/HomePage';
+import { LandingPage, HomePage, RoomPage } from './pages';
 
 import { useDispatch } from 'react-redux';
 import { connectSocket } from './data/actions';
@@ -19,9 +18,9 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <Route path='/' exact component={HomePage} />
-        <Route path='/chat/rooms' exact component={ChatsPage} />
-        <Route path='/chat/room/:roomId' component={RoomPage} />
+        <Route path='/' exact component={LandingPage} />
+        <Route path='/chat/rooms' exact component={HomePage} />
+        <Route path='/chat/rooms/:roomId' component={RoomPage} />
       </Switch>
     </div>
   );
