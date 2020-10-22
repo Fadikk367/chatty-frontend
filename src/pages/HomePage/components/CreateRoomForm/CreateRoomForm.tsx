@@ -3,11 +3,14 @@ import { useDispatch } from 'react-redux';
 
 import { createNewChatRoom } from 'data/actions';
 
-import { FormWrapper } from './CreateRoomForm.css';
+import { FormWrapper, Label, Input, SubmitButton } from './CreateRoomForm.css';
 
 const CreateRoomForm = () => {
   const [newRoomName, setNewRoomName] = useState('');
-  const [roomSlots, setRoomSlots] = useState(0);
+  const [roomSlots, setRoomSlots] = useState(2);
+  const [isProtected, setIsProtected] = useState(false);
+  const [password, setPassword] = useState('');
+  const [tags, setTags] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -20,9 +23,18 @@ const CreateRoomForm = () => {
   return (
     <FormWrapper>
         <form onSubmit={handleCreateNewChatRoom}>
-          <input type="text" value={newRoomName} onChange={e => setNewRoomName(e.target.value)}/>
-          <input type="number" value={roomSlots} onChange={e => setRoomSlots(parseInt(e.target.value))}/>
-          <button type="submit">create room</button>
+          <Label htmlFor="room-name">Name:</Label>
+          <Input type="text" id="room-name" value={newRoomName} onChange={e => setNewRoomName(e.target.value)}/>
+          <Label htmlFor="room-slots">Slots:</Label>
+          <Input type="number" id="room-slots" min="2" max="10" value={roomSlots} onChange={e => setRoomSlots(parseInt(e.target.value))}/>
+          <Label htmlFor="room-isProtected">Password protection:</Label>
+          <Input type="checkbox" id="room-isProtected" checked={isProtected} onChange={e => setIsProtected(e.target.checked)}/>
+          {isProtected ? (
+          <>
+            <Label htmlFor="room-password">Password:</Label>
+            <Input type="password" id="room-password" value={password} onChange={e => setPassword(e.target.value)}/>
+          </>) : null}
+          <SubmitButton type="submit">create room</SubmitButton>
         </form>
     </FormWrapper>
   )
