@@ -14,7 +14,7 @@ export const ModalWrapper = styled.div`
 export const ModalContent = styled.div`
   position: relative;
   width: 400px;
-  height: 600px;
+  max-height: 600px;
 
   top: 50%;
   left: 50%;

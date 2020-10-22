@@ -33,9 +33,6 @@ const RoomPage = () => {
         <ChatHistory messages={room.messages} userId={me.id as string}/>
         <ChatMessageForm user={me} roomId={roomId}/>
       </section>
-      <section>
-        <SectionTitle>Friends:</SectionTitle>
-      </section>
     </RoomPageWraper>
   )
 }

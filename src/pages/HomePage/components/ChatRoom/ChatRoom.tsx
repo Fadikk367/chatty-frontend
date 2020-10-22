@@ -1,24 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Room } from 'data/models';
+import { ChatRoomItem, RoomLink } from './ChatRoom.css';
 
-import { ChatRoomItem } from './ChatRoom.css';
-
-interface ChatRoomProps {
+interface ChatRoomProps extends Room {
   key: string;
-  name: string;
-  membersCount: number;
   onClick: () => void;
   to: string;
 }
 
-const ChatRoom: React.FC<ChatRoomProps> = ({ name, membersCount, to, onClick }) => {
+const ChatRoom: React.FC<ChatRoomProps> = ({ name, members, to, onClick, slots, isProtected }) => {
   return (
     <ChatRoomItem onClick={onClick}>
-      <Link to={to}>
-      <span>{1}</span>
-      <span>{name}</span>
-      <span>{membersCount}</span>
-      </Link>
+      <RoomLink to={to}>
+        <span>{1}</span>
+        <span>{name} - {isProtected ? 'locked' : 'open'}</span>
+        <span>{members.length}/{slots}</span>
+      </RoomLink>
     </ChatRoomItem>
   )
 }

@@ -1,11 +1,14 @@
-import React, { FormEvent, useState } from 'react';
+import React from 'react';
+import { Switch, Route, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { RoomPage } from 'pages';
 import { HomeWrapper, SectionTitle } from './HomePage.css';
-import { ChatRoom, ConnectedUser } from './components';
+import { ChatRoom, ConnectedUser, CreateRoomForm, FilterRoomsForm } from './components';
+import { Modal } from 'components';
 
 import { StoreState } from '../../data/reducers';
-import { createNewChatRoom, joinRoom } from '../../data/actions';
+import { joinRoom } from '../../data/actions';
 import { User, Room } from '../../data/models';
 
 
@@ -13,17 +16,7 @@ const HomePage = () => {
   const rooms = useSelector((store: StoreState) => store.chat.rooms);
   const users = useSelector((store: StoreState) => store.chat.connectedUsers);
   const me = useSelector((store: StoreState) => store.user);
-
-  const [newRoomName, setNewRoomName] = useState('');
-  const [roomSlots, setRoomSlots] = useState(0);
-
   const dispatch = useDispatch();
-
-  const handleCreateNewChatRoom = (e: FormEvent) => {
-    e.preventDefault();
-
-    dispatch(createNewChatRoom(newRoomName, roomSlots ? roomSlots : undefined));
-  }
 
   const handleJoinRoom = (roomId: string) => {
     const room = rooms[roomId];
@@ -44,8 +37,7 @@ const HomePage = () => {
       <ChatRoom 
         key={room.id} 
         onClick={() => handleJoinRoom(room.id)} 
-        membersCount={room.members.length}
-        name={room.name}
+        {...room}
         to={`/chat/rooms/${room.id}`}
       />
     )
@@ -56,16 +48,19 @@ const HomePage = () => {
   return (
     <HomeWrapper>
       <section>
-        <SectionTitle>Create new room:</SectionTitle>
-        <form onSubmit={handleCreateNewChatRoom}>
-          <input type="text" value={newRoomName} onChange={e => setNewRoomName(e.target.value)}/>
-          <input type="number" value={roomSlots} onChange={e => setRoomSlots(parseInt(e.target.value))}/>
-          <button type="submit">create room</button>
-        </form>
-        <SectionTitle>Available rooms: ({renderedAvailableChatRooms.length})</SectionTitle>
-        <ul>
-          {renderedAvailableChatRooms}
-        </ul>
+        <Switch>
+          <Route path="/chat/rooms/:roomId" exact>
+            <RoomPage />
+          </Route>
+          <Route path="/chat/rooms">
+            <SectionTitle>Available rooms: ({renderedAvailableChatRooms.length})</SectionTitle>
+            <FilterRoomsForm />
+            <Link to="/chat/rooms/create/new">new room</Link>
+            <ul>
+              {renderedAvailableChatRooms}
+            </ul>
+          </Route>
+        </Switch>
       </section>
       <section>
         <SectionTitle>Connected users: ({renderedConnectedUsers.length})</SectionTitle>
@@ -73,7 +68,13 @@ const HomePage = () => {
           {renderedConnectedUsers}
         </ul>
       </section>
-
+      <Switch>
+        <Route path="/chat/rooms/create/new" exact>
+          <Modal title="Create new chatroom">
+            <CreateRoomForm />
+          </Modal>
+        </Route>
+      </Switch>
     </HomeWrapper>
   )
 }
