@@ -6,6 +6,7 @@ import { RoomPage } from 'pages';
 import { HomeWrapper, SectionTitle } from './HomePage.css';
 import { ChatRoom, ConnectedUser, CreateRoomForm, FilterRoomsForm } from './components';
 import { Modal } from 'components';
+import { Menu } from 'layout';
 
 import { StoreState } from '../../data/reducers';
 import { joinRoom } from '../../data/actions';
@@ -47,6 +48,7 @@ const HomePage = () => {
   const renderedAvailableChatRooms =  Object.values(rooms).map(renderAvailableChatRoom);
   return (
     <HomeWrapper>
+      <Menu />
       <section>
         <Switch>
           <Route path="/chat/rooms/:roomId" exact>
