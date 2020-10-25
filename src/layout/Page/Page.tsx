@@ -1,11 +1,20 @@
 import React from 'react';
-import { PageWrapper } from './Page.css';
+import { Switch, Route, Redirect } from 'react-router-dom';
+
+import { HomePage, RoomPage, SettingsPage } from 'pages';
 
 const Page = () => {
   return (
-    <PageWrapper>
-      page
-    </PageWrapper>
+    <>
+      <Switch>
+        <Route path='/' exact>
+          <Redirect to='rooms'/>
+        </Route>
+        <Route path='/rooms/:roomId' exact component={RoomPage}/>
+        <Route path='/rooms' component={HomePage}/>
+        <Route path='/settings' component={SettingsPage}/>
+      </Switch>
+    </>
   )
 }
 
