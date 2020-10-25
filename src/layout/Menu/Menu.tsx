@@ -1,13 +1,12 @@
 import React from 'react';
+import { Navigation } from './components';
 
 import { MenuWrapper } from './Menu.css';
 
 const Menu = () => {
   return (
     <MenuWrapper>
-      <span>Chatty</span>
-      <span>Profile</span>
-      <span>Private</span>
+      <Navigation />
     </MenuWrapper>
   )
 }
