@@ -1,7 +1,8 @@
 import React from 'react';
+import { Switch, Link, Route } from 'react-router-dom';
 
 import { LandingPageWrapper, LandingLeft, LandingRight } from './LandingPage.css';
-import { UserLoginForm, GuestEnterForm } from './components';
+import { UserLoginForm, GuestEnterForm, UserRegisterForm } from './components';
 
 import backgroundImage from '../../images/landing_background.png';
 
@@ -14,10 +15,16 @@ const LandingPage = () => {
       </LandingLeft>
       <LandingRight>
         <h2>Welcome to Chatty</h2>
-        <UserLoginForm />
-        <GuestEnterForm />
-        {/* <Link to='/chat/rooms'>Browse chat rooms</Link> */}
-        </LandingRight>
+        <Switch>
+          <Route path="/welcome/register" exact>
+            <UserRegisterForm />
+          </Route>
+          <Route path="/welcome">
+            <UserLoginForm />
+            <GuestEnterForm />
+          </Route>
+        </Switch>
+      </LandingRight>
     </LandingPageWrapper>
   )
 }
