@@ -1,8 +1,9 @@
+import axios from 'axios';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { FormWrapper, Form, Input, InputLabel, ErrorMessage, SubmitButton } from './UserRegisterForm.css';
 
-interface FormData {
+interface RegisterFormData {
   firstName: string;
   lastName: string;
   nickname: string;
@@ -11,12 +12,19 @@ interface FormData {
 }
 
 const UserRegisterForm = () => {
-  const { register, handleSubmit, errors } = useForm<FormData>();
+  const { register, handleSubmit, errors } = useForm<RegisterFormData>();
   
   console.log({ errors });
 
-  const handleFormSubmit = handleSubmit((formData: FormData) => {
+  const handleFormSubmit = handleSubmit(async (formData: RegisterFormData) => {
     console.log(formData);
+    try {
+      const response = await axios.post('http://localhost:3000/auth/register', formData);
+      console.log(response);
+
+    } catch(err) {
+      console.log(err);
+    }
   })
 
   const inputRegister = {
