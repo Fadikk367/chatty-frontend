@@ -1,5 +1,7 @@
 import { DisconnectSocket, ConnectSocket, CreateNewChatUser, NewUser, ReceiveChatState, UserDisconnected, NewRoom, CreateNewChatRoom, DeleteRoom, JoinRoom, LeaveRoom, UserJoinedRoom, UserLeftRoom, WelcomeToRoom, ReceiveChatMessage, SendChatMessage } from './chat.actions';
 
+import { UserLogin, UserLoginSuccess, UserLoginFailure } from './auth.actions';
+
 export enum ActionTypes {
   SOCKET_CONNECT = 'SOCKET_CONNECT',
   SOCKET_DISCONNECT = 'SOCKET_DISCONNECT',
@@ -17,6 +19,12 @@ export enum ActionTypes {
   WELCOME_TO_ROOM = 'WELCOME_TO_ROOM',
   RECEIVE_CHAT_MESSAGE = 'RECEIVE_CHAT_MESSAGE',
   SEND_CHAT_MESSAGE = 'SEND_CHAT_MESSAGE',
+  LOGIN_USER = 'LOGIN_USER',
+  LOGIN_USER_SUCCESS = 'LOGIN_USER_SUCCESS',
+  LOGIN_USER_FAILURE = 'LOGIN_USER_FAILURE',
+  REGISTER_USER = 'REGISTER_USER',
+  REGISTER_USER_SUCCESS = 'REGISTER_USER_SUCCESS',
+  REGISTER_USER_FAILURE = 'REGISTER_USER_FAILURE',
 };
 
 export type Action = 
@@ -35,4 +43,7 @@ export type Action =
   UserLeftRoom |
   WelcomeToRoom |
   ReceiveChatMessage |
-  SendChatMessage;
+  SendChatMessage |
+  UserLogin |
+  UserLoginSuccess |
+  UserLoginFailure;
